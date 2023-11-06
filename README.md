@@ -14,17 +14,17 @@ Mihir Biswas         21BCE5192
 
 # Running
 
-Create database sample in tests/db.txt. Can be tested with the `curl` commands in tests/requests.txt.
+Create database sample in `tests/db.txt`. Can be tested with the `curl` commands in `tests/requests.txt`.
 
 Then for backend (http://localhost:8080/)
  
-`cd backend/
-npm install
-npm run devStart `
+`cd backend/`
+`npm install`
+`npm run devStart `
 
 In another terminal for frontend (http://localhost:3000/)
-`cd frontend/
-npm install
-npm run start `
+`cd frontend/`
+`npm install`
+`npm run start `
 
 
