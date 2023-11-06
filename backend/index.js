@@ -1,28 +1,32 @@
 const express = require("express");
 const app = express(); // actual api
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
+// Mongo
+
+const mongoose = require("mongoose");
+
+mongoose.connect("mongodb://localhost/ticket-system", {
+  useNewUrlParser: true, // ensures that Mongoose properly parses and interprets the MongoDB connection string.
+  useUnifiedTopology: true, // provides better performance and robustness in handling server-related events
+});
+
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "MongoDB connection error:"));
+db.once("open", () => {
+  console.log("Connected to MongoDB");
+});
+
+// Import models
+const Ticket = require("./models/Tickets");
+const User = require("./models/Users");
+
+// Express
 app.use(express.json()); // middleware to parse json
 
 app.listen(PORT, () => console.log(`Running on http://localhost:${PORT}`));
 
-// endpoint
-app.get("/end", (req, res) => {
-  res.status(200).send({
-    name: "khal",
-    age: 19,
-  });
-});
+const ticketRouter = require("./routes/ticket"); // Require the router without middleware
 
-app.post("/end/:id", (req, res) => {
-  // const { id } = req.paramas;
-  const { age } = req.body;
-
-  if (!age) {
-    res.status(400).send({ mssg: "Pls give age" });
-  }
-
-  res.send({
-    fututre: `your age in 3000 is ${age + 97} `,
-  });
-});
+app.use("/ticket", ticketRouter); // Use the router without passing any middleware
+// Use your models as needed in your routes and route handlers
