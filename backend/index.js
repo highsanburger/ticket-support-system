@@ -2,14 +2,15 @@ const express = require("express");
 const app = express(); // actual api
 const PORT = process.env.PORT || 8080;
 
+// server is not configured to allow such requests due to the same-origin policy.
+const cors = require("cors");
+app.use(cors());
+
 // Mongo
 
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://localhost/ticket-system", {
-  useNewUrlParser: true, // ensures that Mongoose properly parses and interprets the MongoDB connection string.
-  useUnifiedTopology: true, // provides better performance and robustness in handling server-related events
-});
+mongoose.connect("mongodb://localhost/ticket-system", {});
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));

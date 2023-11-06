@@ -1,0 +1,14 @@
+curl -X POST -H "Content-Type: application/json" -d '{
+  "title": "Test -2 ",
+  "description": "y is yo millyyyyyy",
+  "status": "Resolved",
+  "createdBy": "Metal Face",
+  "assignedTo": "CZar"
+}' http://localhost:8080/ticket
+
+curl -X PUT -H "Content-Type: application/json" -d '{
+  "title": "Updated Ticket Title",
+  "description": "This is an updated ticket description",
+  "status": "Resolved",
+  "assignedTo": "new-admin"
+}' http://localhost:8080/ticket/<id>
