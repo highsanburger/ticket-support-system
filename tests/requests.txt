@@ -12,3 +12,14 @@ curl -X PUT -H "Content-Type: application/json" -d '{
   "status": "Resolved",
   "assignedTo": "new-admin"
 }' http://localhost:8080/ticket/<id>
+
+
+
+### curl instead of postman
+      - just curl is GET
+      - curl -X POST  ( create new )
+      - curl -X PUT   ( update entirely )
+      - curl -X PATCH ( update partially )
+      - curl -X DELETE 
+      
+      -  curl -H "string" (headers)
