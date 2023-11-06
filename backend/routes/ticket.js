@@ -83,4 +83,21 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// Updating a Ticket (PATCH):
+router.patch("/:id", async (req, res) => {
+  const { id } = req.params;
+  const updateData = req.body; // Data to update the ticket
+
+  try {
+    const updatedTicket = await Ticket.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
+    if (!updatedTicket) {
+      return res.status(404).json({ error: "Ticket not found" });
+    }
+    res.status(200).json(updatedTicket);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 module.exports = router;

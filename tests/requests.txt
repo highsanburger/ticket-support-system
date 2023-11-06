@@ -1,25 +1,23 @@
 curl -X POST -H "Content-Type: application/json" -d '{
-  "title": "Test -2 ",
-  "description": "y is yo millyyyyyy",
-  "status": "Resolved",
-  "createdBy": "Metal Face",
-  "assignedTo": "CZar"
+  "title": "Everything works",
+  "description": "very cool app thanks a lot loremeispias",
+  "status": "Open",
+  "createdBy": "MF DOOM",
+  "assignedTo": "Yaway"
 }' http://localhost:8080/ticket
 
+
 curl -X PUT -H "Content-Type: application/json" -d '{
-  "title": "Updated Ticket Title",
-  "description": "This is an updated ticket description",
-  "status": "Resolved",
+  "title": "Nothing works",
+  "description": "Not everything is not not working",
+  "status": "Open",
   "assignedTo": "new-admin"
 }' http://localhost:8080/ticket/<id>
 
 
+curl -X DELETE http://localhost:8080/ticket/<id>
 
-### curl instead of postman
-      - just curl is GET
-      - curl -X POST  ( create new )
-      - curl -X PUT   ( update entirely )
-      - curl -X PATCH ( update partially )
-      - curl -X DELETE 
-      
-      -  curl -H "string" (headers)
+
+curl -X PATCH -H "Content-Type: application/json" -d '{
+  "status": "Pending"
+}' http://localhost:8080/ticket/<id>
