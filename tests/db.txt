@@ -1,0 +1,34 @@
+~~~> ticket-system> db.tickets.find()
+
+[
+  {
+    _id: ObjectId('65487950655ca5df47d1abed'),
+    title: 'Test',
+    description: 'This works yayyyyyyyyyyyyyyyyyyyyyyyy',
+    status: 'Pending',
+    createdBy: 'Syed',
+    assignedTo: 'Khalid',
+    dateCreated: ISODate("2023-11-06T05:27:44.283Z"),
+    __v: 0
+  },
+  {
+    _id: ObjectId('654895e3cf1d62149abe5014'),
+    title: 'Sample Ticket',
+    description: 'This is a sample ticket',
+    status: 'Open',
+    createdBy: 'user123',
+    assignedTo: 'admin456',
+    dateCreated: ISODate("2023-11-06T07:29:39.725Z"),
+    __v: 0
+  },
+  {
+    _id: ObjectId('6548a62f5bdbc910441f3a70'),
+    title: 'Test -2',
+    description: 'y is yo millyyyyyy',
+    status: 'Resolved',
+    createdBy: 'Metal Face',
+    assignedTo: 'CZar',
+    dateCreated: ISODate("2023-11-06T08:39:11.986Z"),
+    __v: 0
+  }
+]
