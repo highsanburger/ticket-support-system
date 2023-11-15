@@ -6,7 +6,7 @@ const AdminDashboard = () => {
   // GET-ing all records
   useEffect(() => {
     console.log("Fetching data...");
-    fetch("http://localhost:8080/tickets")
+    fetch("http://localhost:8080/ticket")
       .then((response) => response.json())
       .then((data) => {
         console.log("Fetched data:", data);

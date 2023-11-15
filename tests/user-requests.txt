@@ -1,0 +1,34 @@
+1. create user 
+
+curl -X POST -H "Content-Type: application/json" -d '{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com",
+  "password": "securepassword",
+  "accountType": "Client",
+  "active": true,
+  "approved": true
+}' http://localhost:8080/users
+
+
+2. get all users
+
+curl http://localhost:8080/users
+
+
+3. get single user 
+
+curl http://localhost:8080/users/<id>
+
+4. update user 
+
+
+curl -X PUT -H "Content-Type: application/json" -d '{
+  "firstName": "UpdatedJohn",
+  "lastName": "UpdatedDoe"
+}' http://localhost:8080/users/<id>
+
+
+5. Delete user
+
+curl -X DELETE http://localhost:8080/users/<id>

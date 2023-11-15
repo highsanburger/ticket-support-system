@@ -4,7 +4,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
   "status": "Open",
   "createdBy": "MF DOOM",
   "assignedTo": "Yaway"
-}' http://localhost:8080/ticket
+}' http://localhost:8080/tickets
 
 
 curl -X PUT -H "Content-Type: application/json" -d '{
@@ -12,12 +12,12 @@ curl -X PUT -H "Content-Type: application/json" -d '{
   "description": "Not everything is not not working",
   "status": "Open",
   "assignedTo": "new-admin"
-}' http://localhost:8080/ticket/<id>
+}' http://localhost:8080/tickets/<id>
 
 
-curl -X DELETE http://localhost:8080/ticket/<id>
+curl -X DELETE http://localhost:8080/tickets/<id>
 
 
 curl -X PATCH -H "Content-Type: application/json" -d '{
   "status": "Pending"
-}' http://localhost:8080/ticket/<id>
+}' http://localhost:8080/tickets/<id>

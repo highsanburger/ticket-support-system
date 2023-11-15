@@ -1,33 +1,69 @@
 const express = require("express");
-const app = express(); // actual api
-const PORT = process.env.PORT || 8080;
-
-// server is not configured to allow such requests due to the same-origin policy.
-const cors = require("cors");
-app.use(cors());
-
-// Mongo
-
 const mongoose = require("mongoose");
+const cors = require("cors");
+const fileUpload = require("express-fileupload");
+// const { cloudnairyconnect } = require("./config/cloudinary");
+const dotenv = require("dotenv");
+dotenv.config();
 
-mongoose.connect("mongodb://localhost/ticket-system", {});
-
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URL, {
+  // DEPLOY
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 db.once("open", () => {
   console.log("Connected to MongoDB");
 });
 
+// Initialize Express app
+const app = express();
+const PORT = process.env.PORT || 8080;
+
+// Middleware
+app.use(express.json());
+// app.use(
+//   cors({
+//     origin: JSON.parse(process.env.CORS_ORIGIN),
+//     credentials: true,
+//     maxAge: 14400,
+//   }),
+// );
+// app.use(cookieParser());
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp",
+  }),
+);
+// cloudnairyconnect();
+
 // Import models
 const Ticket = require("./models/Tickets");
 const User = require("./models/Users");
 
-// Express
-app.use(express.json()); // middleware to parse json
+// Routes
+const userRoutes = require("./routes/User");
+const ticketRoutes = require("./routes/Ticket");
+// const profileRoutes = require("./routes/Profile");
+// const contactRoutes = require("./routes/ContactUs");
 
-app.listen(PORT, () => console.log(`Running on http://localhost:${PORT}`));
+// Use routers
+app.use("/api/auth", userRoutes);
+app.use("/api/ticket", ticketRoutes);
+// app.use("/api/profile", profileRoutes);
+// app.use("/api/contact", contactRoutes);
 
-const ticketRouter = require("./routes/ticket"); // Require the router without middleware
+// Welcome message
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "Welcome to the API",
+  });
+});
 
-app.use("/ticket", ticketRouter); // Use the router without passing any middleware
-// Use your models as needed in your routes and route handlers
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
