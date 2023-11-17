@@ -25,7 +25,8 @@ import Setting from "./Components/core/Dashboard/Settings";
 import { ACCOUNT_TYPE } from "./utils/constants";
 import ScrollToTop from "./Components/ScrollToTop";
 import { RiWifiOffLine } from "react-icons/ri";
-
+import EmployeeTicketDetails from "./Components/core/Dashboard/EmployeeTicketDetails";
+import TicketDetails from "./Components/core/Dashboard/TicketDetails";
 function App() {
   console.log = function () {};
   const user = useSelector((state) => state.profile.user);
@@ -57,7 +58,14 @@ function App() {
         <Route path="/tickets" element={<AdminDashboard />} />
         <Route path="/users" element={<UserList />} />
         <Route path="/" element={<Home />} />
-
+        <Route
+          path="/userpage/:userId/view-tickets/:ticketId/details"
+          element={<TicketDetails />}
+        />
+        <Route
+          path="/employeepage/:userId/view-tickets/:ticketId/details"
+          element={<EmployeeTicketDetails />}
+        />
         <Route
           path="/login"
           element={
