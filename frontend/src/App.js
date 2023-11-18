@@ -25,7 +25,6 @@ import Setting from "./Components/core/Dashboard/Settings";
 import { ACCOUNT_TYPE } from "./utils/constants";
 import ScrollToTop from "./Components/ScrollToTop";
 import { RiWifiOffLine } from "react-icons/ri";
-
 import EmployeeTicketDetails from "./Components/core/Dashboard/EmployeeTicketDetails";
 import TicketDetails from "./Components/core/Dashboard/TicketDetails";
 function App() {

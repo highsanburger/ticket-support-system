@@ -181,7 +181,6 @@ const EmployeeTicketDetails = () => {
         </div>
       )}
 
-
       <div className="add-feedback-container">
         <textarea
           value={feedbackContent}
