@@ -4,7 +4,7 @@ import { Link, matchPath } from 'react-router-dom'
 import { NavbarLinks } from '../../data/navbar-links'
 import { useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { TiShoppingCart } from 'react-icons/ti'
+
 import ProfileDropDown from '../core/Auth/ProfileDropDown'
 import { useDispatch } from 'react-redux'
 import { useEffect } from 'react'
@@ -79,9 +79,7 @@ const NavBar = ({ setProgress }) => {
                     user && user?.accountType !== "Admin" && (
                         <div className=' md:hidden'>
                             {/* <Link to='/dashboard/cart' className=' relative left-10' onClick={() => { dispatch(setProgress(100)) }} > */}
-                                <div className=''>
-                                    {/* <TiShoppingCart className=' fill-richblack-25 w-8 h-8' /> */}
-                                </div>
+                               
                                 
 
                             {/* </Link> */}

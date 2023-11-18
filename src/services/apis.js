@@ -17,20 +17,18 @@ export const profileEndpoints = {
     BASE_URL + "/profile/getAdminDashboardDetails",
 };
 
-// client ENDPOINTS
-// export const clientEndpoints = {
-//   TICKET_PAYMENT_API: BASE_URL + "/payment/capturePayment",
-//   TICKET_VERIFY_API: BASE_URL + "/payment/verifyPayment",
-//   SEND_PAYMENT_SUCCESS_EMAIL_API: BASE_URL + "/payment/sendPaymentSuccessEmail",
-// };
+// clientS ENDPOINTS
+export const clientEndpoints = {
+ 
+};
 
-// TICKET ENDPOINTS
+// ticket ENDPOINTS
 export const ticketEndpoints = {
   GET_ALL_TICKET_API: BASE_URL + "/ticket/getAllTickets",
   TICKET_DETAILS_API: BASE_URL + "/ticket/getTicketDetails",
-  EDIT_Ticket_API: BASE_URL + "/ticket/editTicket",
+  EDIT_TICKET_API: BASE_URL + "/ticket/editTicket",
   TICKET_CATEGORIES_API: BASE_URL + "/ticket/showAllCategories",
-  CREATE_Ticket_API: BASE_URL + "/ticket/createTicket",
+  CREATE_TICKET_API: BASE_URL + "/ticket/createTicket",
   CREATE_SECTION_API: BASE_URL + "/ticket/addSection",
   CREATE_SUBSECTION_API: BASE_URL + "/ticket/addSubSection",
   UPDATE_SECTION_API: BASE_URL + "/ticket/updateSection",
@@ -41,7 +39,7 @@ export const ticketEndpoints = {
   DELETE_TICKET_API: BASE_URL + "/ticket/deleteTicket",
   GET_FULL_TICKET_DETAILS_AUTHENTICATED:
     BASE_URL + "/ticket/getFullTicketDetails",
-  LECTURE_COMPLETION_API: BASE_URL + "/ticket/updateticketProgress",
+  LECTURE_COMPLETION_API: BASE_URL + "/ticket/updateTicketProgress",
   CREATE_RATING_API: BASE_URL + "/ticket/createRating",
   ADD_TICKET_TO_CATEGORY_API: BASE_URL + "/ticket/addTicketToCategory",
   SEARCH_TICKETS_API: BASE_URL + "/ticket/searchTicket",

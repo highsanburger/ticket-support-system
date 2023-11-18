@@ -1,4 +1,7 @@
 import "./App.css";
+// src\App.js
+import React from 'react';
+
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import NavBar from "./Components/common/NavBar";
@@ -7,7 +10,6 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-import UpdatePassword from "./pages/UpdatePassword";
 import VerifyOtp from "./pages/VerifyOtp";
 import About from "./pages/About";
 import ContactUs from "./pages/ContactUs";
@@ -20,9 +22,22 @@ import OpenRoute from "./Components/core/Auth/OpenRoute";
 import PrivateRoute from "./Components/core/Auth/PrivateRoute";
 import MyProfile from "./Components/core/Dashboard/MyProfile";
 import Setting from "./Components/core/Dashboard/Settings";
+
+
 import { ACCOUNT_TYPE } from "./utils/constants";
+import AddTicket from "./Components/core/Dashboard/AddTicket/index";
+import MyTickets from "./Components/core/Dashboard/MyTickets/MyTickets";
+
+
 import ScrollToTop from "./Components/ScrollToTop";
+
+import SearchTicket from "./pages/SearchTicket";
+
+
+
+import AdminDashboard from "./Components/core/Dashboard/AdminDashboard/AdminDashboard";
 import { RiWifiOffLine } from "react-icons/ri";
+
 
 function App() {
   console.log = function () {};
@@ -54,7 +69,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
 
-        
+       
 
         <Route
           path="/login"
@@ -84,15 +99,9 @@ function App() {
 
         <Route path="/contact" element={<ContactUs />} />
 
-        <Route
-          path="update-password/:id"
-          element={
-            <OpenRoute>
-              <UpdatePassword />
-            </OpenRoute>
-          }
-        />
+        
 
+        <Route path="/search/:searchQuery" element={<SearchTicket />} />
 
         <Route
           element={
@@ -105,16 +114,40 @@ function App() {
           <Route path="dashboard/settings" element={<Setting />} />
           {user?.accountType === ACCOUNT_TYPE.CLIENT && (
             <>
-              hey
-              
+            
+             
              
             </>
           )}
-         
-         
+          {user?.accountType === ACCOUNT_TYPE.ADMIN && (
+            <>
+              <Route path="dashboard/add-ticket" element={<AddTicket />} />
+              <Route path="dashboard/my-tickets" element={<MyTickets />} />
+
+              <Route
+                path="dashboard/admin"
+                element={<AdminDashboard />}
+              />
+            </>
+          )}
+          
         </Route>
 
-        
+        <Route
+          element={
+            <PrivateRoute>
+          
+            </PrivateRoute>
+          }
+        >
+          {user?.accountType === ACCOUNT_TYPE.CLIENT && (
+            <>
+              <Route
+                
+              />
+            </>
+          )}
+        </Route>
 
         <Route path="*" element={<Home />} />
       </Routes>

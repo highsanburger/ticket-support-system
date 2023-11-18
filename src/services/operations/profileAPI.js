@@ -152,13 +152,13 @@ export async function deleteAccount(token,dispatch,navigate){
   toast.dismiss(toastId);
 }
 
-//get admin dashboard
+//get Admin dashboard
 export async function getAdminDashboard(token,dispatch){
   // const toastId = toast.loading("Loading...");
   dispatch(setProgress);
   let result = []
   try {
-    console.log("BEFORE Calling BACKEND API FOR ADMIN DASHBOARD");
+    console.log("BEFORE Calling BACKEND API FOR Admin DASHBOARD");
     const response = await apiConnector(
       "GET",
       profileEndpoints.GET_ALL_ADMIN_DASHBOARD_DETAILS_API,

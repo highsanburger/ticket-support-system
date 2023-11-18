@@ -1,9 +1,9 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { useEffect } from 'react'
-import { searchTickets } from '../services/operations/ticketDetailsAPI'
+
 import { useState } from 'react'
-import CatalogCard from '../Components/core/Catalog/CatalogCard'
+
 import { useDispatch } from 'react-redux'
 import {HiOutlineEmojiSad} from 'react-icons/hi'
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
@@ -76,7 +76,7 @@ const SearchTicket = () => {
                 <div className='mx-auto flex flex-wrap p-5 gap-4 justify-evenly m-5'>
                 {searchResults?.map((item)=>(
                     <div className='flex flex-col gap-4'>
-                    <CatalogCard ticket={item} Height={"lg:h-[250px] h-[100px]"} />
+                 
                     </div>
                 ))}
                 </div>

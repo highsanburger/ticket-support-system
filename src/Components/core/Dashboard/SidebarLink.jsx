@@ -23,7 +23,18 @@ const SidebarLink = ({link, iconName}) => {
 
         
 
-       
+        <div className='flex item-center  gap-x-2 flex-col md:flex-row' onClick={
+            () => {
+                dispatch(setEditTicket(false))
+            }
+        }>
+
+            <Icon className="md:text-lg text-3xl" />
+            <span className='hidden md:block'>{link.name}</span>
+            <span className={`absolute bottom-0 left-0 md:top-0 h-[0.2rem] w-full md:h-full md:w-[0.2rem] bg-yellow-50 opacity-0 transition-all duration-300
+                  ${matchRoute(link.path) ? "opacity-100": "opacity-0"}`}>
+            </span>
+        </div>
     </NavLink>
   )
 }
