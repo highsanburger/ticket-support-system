@@ -54,6 +54,7 @@ const ticketRoutes = require("./routes/Ticket");
 // Use routers
 app.use("/api/auth", userRoutes);
 app.use("/api/ticket", ticketRoutes);
+
 app.use("/api/tickets", createRoutes);
 // app.use("/api/profile", profileRoutes);
 // app.use("/api/contact", contactRoutes);

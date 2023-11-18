@@ -14,6 +14,7 @@ const TicketDetails = () => {
       baseURL: "http://localhost:5000",
     });
 
+    
     api
       .get(`/api/tickets/${ticketId}/details`)
       .then((response) => {

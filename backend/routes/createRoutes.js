@@ -147,13 +147,11 @@ router.patch("/:ticketId/update-status", async (req, res) => {
   try {
     const ticketId = req.params.ticketId;
     const newStatus = req.body.newStatus;
-
     const updatedTicket = await Ticket.findByIdAndUpdate(
       ticketId,
       { currentstatus: newStatus },
       { new: true }
     );
-
     if (!updatedTicket) {
       return res.status(404).json({ message: "Ticket not found" });
     }
