@@ -1,8 +1,9 @@
 // createRoutes.js
 const express = require("express");
 const router = express.Router();
-const Ticket = require("../models/ticketCreate");
-const User = require("../models/user");
+// const Ticket = require("../models/ticketCreate");
+const Ticket = require("../models/Tickets");
+const User = require("../models/Users");
 
 router.post("/create", async (req, res) => {
   try {
@@ -151,7 +152,7 @@ router.patch("/:ticketId/update-status", async (req, res) => {
     const updatedTicket = await Ticket.findByIdAndUpdate(
       ticketId,
       { currentstatus: newStatus },
-      { new: true }
+      { new: true },
     );
     if (!updatedTicket) {
       return res.status(404).json({ message: "Ticket not found" });

@@ -1,10 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const fileUpload = require("express-fileupload");
-const createRoutes = require("./routes/createRoutes");
-// const { cloudnairyconnect } = require("./config/cloudinary");
 const dotenv = require("dotenv");
+
+const fileUpload = require("express-fileupload");
+// const createRoutes = require("./routes/createRoutes");
+// const { cloudnairyconnect } = require("./config/cloudinary");
 dotenv.config();
 
 // Connect to MongoDB
@@ -37,7 +38,7 @@ app.use(
   fileUpload({
     useTempFiles: true,
     tempFileDir: "/tmp",
-  })
+  }),
 );
 // cloudnairyconnect();
 
@@ -54,7 +55,7 @@ const ticketRoutes = require("./routes/Ticket");
 // Use routers
 app.use("/api/auth", userRoutes);
 app.use("/api/ticket", ticketRoutes);
-app.use("/api/tickets", createRoutes);
+// app.use("/api/tickets", createRoutes);
 // app.use("/api/profile", profileRoutes);
 // app.use("/api/contact", contactRoutes);
 
