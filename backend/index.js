@@ -1,6 +1,6 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
+const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 
 const fileUpload = require("express-fileupload");
@@ -14,6 +14,7 @@ dotenv.config();
 //   useNewUrlParser: true,
 //   useUnifiedTopology: true,
 // });
+//
 mongoose.connect(process.env.MONGO_URL);
 
 const db = mongoose.connection;
@@ -28,6 +29,13 @@ const PORT = process.env.PORT || 8080;
 
 // Middleware
 app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true, // Enable credentials (cookies, authorization headers, etc.)
+  }),
+);
 // app.use(
 //   cors({
 //     origin: JSON.parse(process.env.CORS_ORIGIN),
