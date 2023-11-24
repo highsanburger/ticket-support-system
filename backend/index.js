@@ -9,11 +9,13 @@ const fileUpload = require("express-fileupload");
 dotenv.config();
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URL, {
-  // DEPLOY
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+// mongoose.connect(process.env.MONGO_URL, {
+//   // DEPLOY
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// });
+mongoose.connect(process.env.MONGO_URL);
+
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 db.once("open", () => {
