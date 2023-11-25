@@ -1,0 +1,3 @@
+- Ticket view user based on createdBy
+- User model accountType enum
+- not getting response for POST signup

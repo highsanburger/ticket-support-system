@@ -3,11 +3,10 @@ const router = express.Router();
 const Ticket = require("../models/Tickets");
 
 // Create a new ticket
-router.post("/", async (req, res) => {
-  // Parse request data, validate, and create a new ticket using the Ticket model
+router.post("/create", async (req, res) => {
   try {
-    // You can access the Ticket model through req, as you passed it as middleware
-    const { title, description, status, createdBy, assignedTo } = req.body;
+    const { title, description, status, assignedTo } = req.body;
+    const createdBy = req.user.email; // Assuming user information is attached to req.user
     const newTicket = await Ticket.create({
       title,
       description,
@@ -32,6 +31,17 @@ router.get("/", async (req, res) => {
 });
 
 // Define other CRUD routes such as fetching a single ticket, updating, and deleting
+
+// get tickets by createdBy
+router.get("/user", async (req, res) => {
+  try {
+    const createdBy = req.user.email; // Assuming user information is attached to req.user
+    const userTickets = await Ticket.find({ createdBy });
+    res.status(200).json(userTickets);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // Fetching a Single Ticket:
 
