@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "./AdminDashboard.css"; // Import the CSS file
+
 
 const AdminDashboard = () => {
   const [tickets, setTickets] = useState([]);
@@ -26,6 +28,9 @@ const AdminDashboard = () => {
     // Redirect to the TicketView component with the specific ticket's ID
     navigate(`/admin/ticket/${ticketId}`);
   };
+  
+ 
+
   return (
     <div>
       <h2>Admin Dashboard</h2>
@@ -62,5 +67,6 @@ const AdminDashboard = () => {
     </div>
   );
 };
+
 
 export default AdminDashboard;

@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext"; // Correct the path if needed
+import "./CreateTicketForm.css"; // Import CSS file
 
 const CreateTicketForm = () => {
   const { user } = useContext(AuthContext); // Change 'auth' to 'user' since 'user' is the property in the context
@@ -39,22 +40,28 @@ const CreateTicketForm = () => {
     }
   };
 
-  return (
-    <div>
-      <h2>Create Ticket</h2>
-      <label>
-        Title:
-        <input type="text" value={title} onChange={handleTitleChange} />
-      </label>
-      <br />
-      <label>
-        Description:
-        <textarea value={description} onChange={handleDescriptionChange} />
-      </label>
-      <br />
-      <button onClick={handleCreateTicket}>Create Ticket</button>
-    </div>
-  );
+
+return (
+  <div className="create-ticket-container2" >
+    <div className="create-ticket-container"> {/* Apply CSS class to the main container */}
+    <h2>Create Ticket</h2>
+    <label>
+      Title:
+      
+      <input type="text" value={title} onChange={handleTitleChange} />
+    </label>
+    <br />
+    <label>
+      Description:
+      <textarea value={description} onChange={handleDescriptionChange} />
+    </label>
+    <br />
+    <button onClick={handleCreateTicket}>Create Ticket</button>
+  </div>
+
+  </div>
+  
+);
 };
 
 export default CreateTicketForm;
