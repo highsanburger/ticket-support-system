@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-const TicketView = () => {
+const AdminTicketView = () => {
   const [ticket, setTicket] = useState(null);
   const [newStatus, setNewStatus] = useState("");
   const [newAssignedTo, setNewAssignedTo] = useState("");
@@ -94,4 +94,4 @@ const TicketView = () => {
   );
 };
 
-export default TicketView;
+export default AdminTicketView;

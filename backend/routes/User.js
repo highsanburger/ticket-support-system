@@ -1,21 +1,63 @@
+// routes/User.js
 const express = require("express");
 const router = express.Router();
 const User = require("../models/Users");
+const bcrypt = require("bcryptjs");
 
+// Register a new user
+router.post("/register", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const newUser = await User.create({
+      email,
+      password,
+    });
+
+    const token = newUser.generateAuthToken();
+    res.status(201).json({ user: newUser, token });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Login
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    const token = user.generateAuthToken();
+    res.status(200).json({ user, token });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Other routes...
+
+module.exports = router;
 // Create a new user
 router.post("/", async (req, res) => {
   try {
     const {
       email,
       password,
-      username,
       // accountType,
     } = req.body;
 
     const newUser = await User.create({
       email,
       password,
-      username,
       // accountType,
     });
 

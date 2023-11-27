@@ -4,37 +4,60 @@ import { useParams } from "react-router-dom";
 
 const UserTicketView = () => {
   const [ticket, setTicket] = useState(null);
-  const { ticketId } = useParams();
+  const [newStatus, setNewStatus] = useState("");
+  const [isDeleteConfirmed, setIsDeleteConfirmed] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
+  const { id } = useParams();
 
   useEffect(() => {
-    console.log("Effect Triggered");
-
-    if (!ticketId) {
-      return; // Don't proceed if ticketId is undefined
-    }
-
-    const fetchTicketDetails = async () => {
+    const fetchTicket = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/ticket/${ticketId}`,
+          `http://localhost:4000/api/ticket/${id}`,
         );
-        const { data } = response;
-        setTicket(data);
+        const ticketData = response.data;
+        setTicket(ticketData);
+        setNewStatus(ticketData.status);
       } catch (error) {
-        console.error("Error fetching ticket details:", error.response);
+        console.error("Error fetching ticket:", error);
       }
     };
 
-    fetchTicketDetails();
+    fetchTicket();
+  }, [id]);
 
-    // Cleanup function to run when the component is unmounted
-    return () => {
-      setTicket(null); // Clear the state to prevent updating unmounted component
-    };
-  }, [ticketId]);
+  const handleStatusChange = async () => {
+    try {
+      const response = await axios.put(
+        `http://localhost:4000/api/ticket/${id}`,
+        {
+          status: newStatus,
+        },
+      );
+      setTicket(response.data);
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:4000/api/ticket/${id}`);
+      setIsDeleted(true);
+      // Optionally, you can handle other actions after deletion.
+    } catch (error) {
+      console.error("Error deleting ticket:", error);
+    }
+  };
+
+  if (isDeleted) {
+    // Redirect to another page after deletion
+    window.location.href = "/user"; // Change "/tickets" to the desired path
+    return null; // You can also render a loading message here if needed
+  }
 
   if (!ticket) {
-    return <div>Loading...</div>;
+    return <p>Loading...</p>;
   }
 
   return (
@@ -44,8 +67,34 @@ const UserTicketView = () => {
       <p>Description: {ticket.description}</p>
       <p>Status: {ticket.status}</p>
       <p>Created By: {ticket.createdBy}</p>
-      <p>Assigned To: {ticket.assignedTo}</p>
       <p>Date Created: {new Date(ticket.dateCreated).toLocaleString()}</p>
+
+      {/* Update Status */}
+      <label>
+        Update Status:
+        <select
+          value={newStatus}
+          onChange={(e) => setNewStatus(e.target.value)}
+        >
+          <option value="Open">Open</option>
+          <option value="Pending">Pending</option>
+          <option value="Resolved">Resolved</option>
+        </select>
+        <button onClick={handleStatusChange}>Update Status</button>
+      </label>
+
+      {/* Delete Button */}
+      {isDeleteConfirmed ? (
+        <div>
+          <p>Are you sure you want to delete this ticket?</p>
+          <button onClick={handleDelete}>Confirm Delete</button>
+          <button onClick={() => setIsDeleteConfirmed(false)}>Cancel</button>
+        </div>
+      ) : (
+        <button onClick={() => setIsDeleteConfirmed(true)}>
+          Delete Ticket
+        </button>
+      )}
     </div>
   );
 };

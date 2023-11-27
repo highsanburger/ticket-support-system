@@ -5,14 +5,13 @@ const Ticket = require("../models/Tickets");
 // Create a new ticket
 router.post("/create", async (req, res) => {
   try {
-    const { title, description, status, assignedTo } = req.body;
-    const createdBy = req.user.email; // Assuming user information is attached to req.user
+    const { title, description, status, createdBy } = req.body;
+    // const createdBy = req.user.email; // Assuming user information is attached to req.user
     const newTicket = await Ticket.create({
       title,
       description,
       status,
       createdBy,
-      assignedTo,
     });
     res.status(201).json(newTicket);
   } catch (error) {
@@ -33,20 +32,19 @@ router.get("/", async (req, res) => {
 // Define other CRUD routes such as fetching a single ticket, updating, and deleting
 
 // get tickets by createdBy
-router.get("/user", async (req, res) => {
+router.get("/user/:createdBy", async (req, res) => {
   try {
-    const createdBy = req.user.email; // Assuming user information is attached to req.user
-    const userTickets = await Ticket.find({ createdBy });
+    const createdBy = req.params.createdBy;
+    const userTickets = await Ticket.find({ createdBy: createdBy });
     res.status(200).json(userTickets);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-});
-
-// Fetching a Single Ticket:
+}); // Fetching a Single Ticket:
 
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
+
   try {
     const ticket = await Ticket.findById(id);
     if (!ticket) {

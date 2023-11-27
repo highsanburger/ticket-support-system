@@ -1,43 +1,48 @@
 // components/User/UserDashboard.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link, Routes, Route } from "react-router-dom";
+import { Link, Routes, Route, useNavigate } from "react-router-dom";
 import UserTicketView from "./UserTicketView";
 
+import { useSelector } from "react-redux"; // Import the useSelector hook
+
 const UserDashboard = () => {
-  const [userName, setUserName] = useState("");
   const [userTickets, setUserTickets] = useState([]);
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // const user = useSelector((state) => state.auth.user);
+  // const userEmail = user ? user.email : null; // Extract email if the user object exists
 
-    try {
-      // Fetch tickets created by the specified user
-      const response = await axios.get(
-        `http://localhost:4000/api/ticket/user/${userName}`,
-      );
+  const userEmail = localStorage.getItem("userEmail");
+  console.log(userEmail);
+  // Hardcoded createdBy value
+  const createdBy = userEmail ? userEmail : "email";
 
-      setUserTickets(response.data);
-    } catch (error) {
-      console.error("Error fetching user tickets:", error);
-    }
+  useEffect(() => {
+    // Fetch tickets created by the specified user
+    const fetchUserTickets = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/api/ticket/user/${createdBy}`,
+        );
+        setUserTickets(response.data);
+      } catch (error) {
+        console.error("Error fetching user tickets:", error);
+      }
+    };
+
+    fetchUserTickets();
+  }, [createdBy]);
+
+  const handleViewTicket = (ticketId) => {
+    // Redirect to the individual ticket view
+    navigate(`/user/ticket/${ticketId}`);
   };
 
   return (
     <div>
       <h2>User Dashboard</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Enter Your Name:
-          <input
-            type="text"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-            placeholder="Enter your name"
-          />
-        </label>
-        <button type="submit">Submit</button>
-      </form>
+      <p>Showing tickets created by: {createdBy}</p>
       {userTickets.length > 0 && (
         <table>
           <thead>
@@ -55,9 +60,9 @@ const UserDashboard = () => {
                 <td>{ticket.description}</td>
                 <td>{ticket.status}</td>
                 <td>
-                  <Link to={`/user/ticket/${ticket._id}`}>
-                    <button>View</button>
-                  </Link>
+                  <button onClick={() => handleViewTicket(ticket._id)}>
+                    View
+                  </button>
                 </td>
               </tr>
             ))}

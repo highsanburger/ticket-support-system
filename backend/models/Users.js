@@ -1,5 +1,7 @@
+// models/Users.js
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -7,19 +9,10 @@ const userSchema = new mongoose.Schema({
     required: [true, "Your email address is required"],
     unique: true,
   },
-  username: {
-    type: String,
-    required: [true, "Your username is required"],
-  },
   password: {
     type: String,
     required: [true, "Your password is required"],
   },
-  // accountType: {
-  //   type: String,
-  // enum: ["Admin", "User"],
-  // required: true,
-  // },
   createdAt: {
     type: Date,
     default: new Date(),
@@ -30,5 +23,11 @@ const userSchema = new mongoose.Schema({
 userSchema.pre("save", async function () {
   this.password = await bcrypt.hash(this.password, 12);
 });
+
+// Generate JWT token for authentication
+userSchema.methods.generateAuthToken = function () {
+  const token = jwt.sign({ _id: this._id }, "your-secret-key"); // Replace "your-secret-key" with a secret key for JWT
+  return token;
+};
 
 module.exports = mongoose.model("User", userSchema);
