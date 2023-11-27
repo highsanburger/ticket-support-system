@@ -4,11 +4,18 @@ const router = express.Router();
 const User = require("../models/Users");
 const bcrypt = require("bcryptjs");
 
-// Register a new user
+// Register
 router.post("/register", async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // Check if a user with the provided email already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(501).json({ error: "User already exists." });
+    }
+
+    // If the user does not exist, create a new user
     const newUser = await User.create({
       email,
       password,
@@ -20,7 +27,6 @@ router.post("/register", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 // Login
 router.post("/login", async (req, res) => {
   try {
@@ -28,12 +34,12 @@ router.post("/login", async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ error: "Invalid credentials" });
+      return res.status(401).json({ error: "User does not exist." });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ error: "Invalid credentials" });
+      return res.status(401).json({ error: "Incorrect password." });
     }
 
     const token = user.generateAuthToken();

@@ -1,3 +1,4 @@
-- Ticket view user based on createdBy
-
-- TicketView status showing only update
+- admin email in .env?
+- user autherization
+- maybe move away from localStorage?
+- comments in ticketview

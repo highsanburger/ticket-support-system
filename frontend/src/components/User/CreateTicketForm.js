@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./CreateTicketForm.css"; // Import CSS file
-
+import { useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux"; // Import the useSelector hook
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const CreateTicketForm = () => {
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [notification, setNotification] = useState(null);
@@ -38,11 +42,17 @@ const CreateTicketForm = () => {
       );
 
       // Set notification state to success message
-      setNotification({
-        type: "success",
-        message: "Ticket created successfully!",
-      });
+      // setNotification({
+      //   type: "success",
+      //   message: "Ticket created successfully!",
+      // });
+      toast.success("Ticket created successfully!");
 
+      // Wait for some time (e.g., 2000 milliseconds or 2 seconds)
+      setTimeout(() => {
+        // Navigate after waiting
+        navigate("/user");
+      }, 2500);
       // You might want to redirect the user or perform additional actions
 
       // Clear the form after successful submission
@@ -66,6 +76,18 @@ const CreateTicketForm = () => {
   return (
     <div className="create-ticket-container2">
       <div className="create-ticket-container">
+        <ToastContainer
+          position="top-center"
+          autoClose={2500}
+          hideProgressBar={true}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
         {/* Apply CSS class to the main container */}
         <h2>Create Ticket</h2>
         <label>

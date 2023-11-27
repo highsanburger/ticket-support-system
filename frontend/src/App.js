@@ -28,9 +28,6 @@ function App() {
   return (
     <Routes>
       {/* If the user is authenticated, redirect to the appropriate dashboard */}
-      {isAuthenticated && (
-        <Route path="/" element={<Navigate to="/user/dashboard" />} />
-      )}
       {!isAuthenticated && (
         <Route path="/" element={<Navigate to="/login" />} />
       )}

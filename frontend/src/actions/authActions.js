@@ -2,45 +2,44 @@
 
 import axios from "axios";
 
-export const LOGIN_USER = "LOGIN_USER";
-export const REGISTER_USER = "REGISTER_USER";
-
-// authActions.js
-
 export const loginUser = (email, password) => async (dispatch) => {
   try {
     const response = await axios.post("http://localhost:4000/api/user/login", {
       email,
       password,
     });
-
-    // Store user information in localStorage
-    localStorage.setItem("userEmail", response.data.user.email);
-
     dispatch({
       type: "LOGIN_USER",
-      payload: { user: response.data.user, token: response.data.token },
+      payload: response.data, // Return the entire response
     });
+
+    return response; // Return the entire response
   } catch (error) {
+    // Handle login error
     console.error("Login Error:", error);
+    throw error; // Re-throw the error for the component to handle
   }
 };
 
-export const registerUser = (email, password) => async (dispatch) => {
+export const registerUser = (email, password, username) => async (dispatch) => {
   try {
     const response = await axios.post(
       "http://localhost:4000/api/user/register",
       {
         email,
         password,
+        username,
       },
     );
     dispatch({
-      type: REGISTER_USER,
-      payload: { user: response.data.user, token: response.data.token },
+      type: "REGISTER_USER",
+      payload: response.data, // Return the entire response
     });
+
+    return response; // Return the entire response
   } catch (error) {
     // Handle registration error
     console.error("Registration Error:", error);
+    throw error; // Re-throw the error for the component to handle
   }
 };
