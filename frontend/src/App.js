@@ -1,125 +1,33 @@
-import "./App.css";
-import AdminDashboard from "./AdminDashboard";
-import UserList from "./UsersList";
-import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import NavBar from "./Components/common/NavBar";
-import Footer from "./Components/common/Footer";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-import UpdatePassword from "./pages/UpdatePassword";
-import VerifyOtp from "./pages/VerifyOtp";
-import About from "./pages/About";
-import ContactUs from "./pages/ContactUs";
-import LoadingBar from "react-top-loading-bar";
-import { setProgress } from "./slices/loadingBarSlice";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import Dashboard from "./pages/Dashboard";
-import OpenRoute from "./Components/core/Auth/OpenRoute";
-import PrivateRoute from "./Components/core/Auth/PrivateRoute";
-import MyProfile from "./Components/core/Dashboard/MyProfile";
-import Setting from "./Components/core/Dashboard/Settings";
-import { ACCOUNT_TYPE } from "./utils/constants";
-import ScrollToTop from "./Components/ScrollToTop";
-import { RiWifiOffLine } from "react-icons/ri";
-import EmployeeTicketDetails from "./Components/core/Dashboard/EmployeeTicketDetails";
-import TicketDetails from "./Components/core/Dashboard/TicketDetails";
+// App.js
+// import React from "react";
+import { Route, Routes } from "react-router-dom";
+// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// import PrivateRoute from "./components/common/PrivateRoute";
+import AdminDashboard from "./components/Admin/AdminDashboard";
+import TicketView from "./components/Admin/TicketView";
+import UserLandingPage from "./components/User/UserLandingPage";
+import CreateTicketForm from "./components/User/CreateTicketForm";
+import UserDashboard from "./components/User/UserDashboard";
+import UserTicketView from "./components/User/UserTicketView";
+
+// import { Login, Signup } from "./pages";
+// import Home from "./pages/Home";
+
 function App() {
-  console.log = function () {};
-  const user = useSelector((state) => state.profile.user);
-  const progress = useSelector((state) => state.loadingBar);
-  const dispatch = useDispatch();
   return (
-    <div className=" w-screen min-h-screen bg-richblack-900 flex flex-col font-inter">
-      <LoadingBar
-        color="#FFD60A"
-        height={1.4}
-        progress={progress}
-        onLoaderFinished={() => dispatch(setProgress(0))}
-      />
-      <NavBar setProgress={setProgress}></NavBar>
-      {!navigator.onLine && (
-        <div className="bg-red-500 flex text-white text-center p-2 bg-richblack-300 justify-center gap-2 items-center">
-          <RiWifiOffLine size={22} />
-          Please check your internet connection.
-          <button
-            className="ml-2 bg-richblack-500 rounded-md p-1 px-2 text-white"
-            onClick={() => window.location.reload()}
-          >
-            Retry
-          </button>
-        </div>
-      )}
-      <ScrollToTop />
-      <Routes>
-        <Route path="/tickets" element={<AdminDashboard />} />
-        <Route path="/users" element={<UserList />} />
-        <Route path="/" element={<Home />} />
-        <Route
-          path="/userpage/:userId/view-tickets/:ticketId/details"
-          element={<TicketDetails />}
-        />
-        <Route
-          path="/employeepage/:userId/view-tickets/:ticketId/details"
-          element={<EmployeeTicketDetails />}
-        />
-        <Route
-          path="/login"
-          element={
-            <OpenRoute>
-              <Login />
-            </OpenRoute>
-          }
-        />
+    <Routes>
+      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/admin/ticket/:id" element={<TicketView />} />
 
-        <Route
-          path="/signup"
-          element={
-            <OpenRoute>
-              <Signup />
-            </OpenRoute>
-          }
-        />
-
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-
-        <Route path="/update-password/:id" element={<ResetPassword />} />
-
-        <Route path="/verify-email" element={<VerifyOtp />} />
-
-        <Route path="/about" element={<About />} />
-
-        <Route path="/contact" element={<ContactUs />} />
-
-        <Route
-          path="update-password/:id"
-          element={
-            <OpenRoute>
-              <UpdatePassword />
-            </OpenRoute>
-          }
-        />
-
-        <Route
-          element={
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
-          }
-        >
-          <Route path="dashboard/my-profile" element={<MyProfile />} />
-          <Route path="dashboard/settings" element={<Setting />} />
-          {user?.accountType === ACCOUNT_TYPE.CLIENT && <>hey</>}
-        </Route>
-
-        <Route path="*" element={<Home />} />
-      </Routes>
-      <Footer />
-    </div>
+      <Route path="/user/*" element={<UserLandingPage />} />
+      <Route path="/user/create" element={<CreateTicketForm />} />
+      <Route path="/user/dashboard/*" element={<UserDashboard />} />
+      <Route path="/user/ticket/:id" element={<UserTicketView />} />
+    </Routes>
   );
 }
+// <Route path="/admin/dashboard" element={<AdminDashboard />} />
+// <Route path="/admin/ticket/:id" element={<TicketView />} />
+//
 
 export default App;

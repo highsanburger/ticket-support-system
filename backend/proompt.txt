@@ -1,0 +1,474 @@
+
+backend/index.js
+// Accessing .env
+require("dotenv").config();
+const { MONGO_URL, PORT } = process.env;
+
+// Connection to MongoDB
+const mongoose = require("mongoose");
+mongoose
+  .connect(MONGO_URL)
+  .then(() => console.log("MongoDB connected successfully"))
+  .catch((err) => console.error(err));
+
+// Initialize Express app
+const express = require("express");
+const app = express();
+
+// Middleware
+
+// add a body property to the req object
+app.use(express.json());
+
+// allow requests from other domains to access the resources on your server
+const cors = require("cors");
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true, // Enable credentials (cookies, authorization headers, etc.)
+  }),
+);
+
+// manages cookie-based sessions or extracts data from cookies
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
+
+// // Import models
+// const Ticket = require("./models/Tickets");
+// const User = require("./models/Users");
+
+// const userRoute = require("./routes/User");
+const ticketRoute = require("./routes/Ticket");
+const authRoute = require("./routes/Auth");
+
+// app.use("/api/auth/", userRoute);
+app.use("/api/ticket", ticketRoute);
+app.use("/api/auth/", authRoute);
+
+// Welcome message
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "Welcome to the API",
+  });
+});
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+routes/Ticket.js
+const express = require("express");
+const router = express.Router();
+const Ticket = require("../models/Tickets");
+
+// Create a new ticket
+router.post("/create", async (req, res) => {
+  try {
+    const { title, description, status, assignedTo } = req.body;
+    const createdBy = req.user.email; // Assuming user information is attached to req.user
+    const newTicket = await Ticket.create({
+      title,
+      description,
+      status,
+      createdBy,
+      assignedTo,
+    });
+    res.status(201).json(newTicket);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get a list of all tickets
+router.get("/", async (req, res) => {
+  try {
+    const tickets = await Ticket.find();
+    res.status(200).json(tickets);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Define other CRUD routes such as fetching a single ticket, updating, and deleting
+
+// get tickets by createdBy
+router.get("/user", async (req, res) => {
+  try {
+    const createdBy = req.user.email; // Assuming user information is attached to req.user
+    const userTickets = await Ticket.find({ createdBy });
+    res.status(200).json(userTickets);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Fetching a Single Ticket:
+
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const ticket = await Ticket.findById(id);
+    if (!ticket) {
+      return res.status(404).json({ error: "Ticket not found" });
+    }
+    res.status(200).json(ticket);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Updating a Ticket:
+
+router.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const updateData = req.body; // Data to update the ticket
+
+  try {
+    const updatedTicket = await Ticket.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
+    if (!updatedTicket) {
+      return res.status(404).json({ error: "Ticket not found" });
+    }
+    res.status(200).json(updatedTicket);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Deleting a Ticket:
+
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedTicket = await Ticket.findByIdAndDelete(id);
+    if (!deletedTicket) {
+      return res.status(404).json({ error: "Ticket not found" });
+    }
+    res.status(204).end(); // No content, successful deletion
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Updating a Ticket (PATCH):
+router.patch("/:id", async (req, res) => {
+  const { id } = req.params;
+  const updateData = req.body; // Data to update the ticket
+
+  try {
+    const updatedTicket = await Ticket.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
+    if (!updatedTicket) {
+      return res.status(404).json({ error: "Ticket not found" });
+    }
+    res.status(200).json(updatedTicket);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+module.exports = router;
+
+
+routes/User.js
+const express = require("express");
+const router = express.Router();
+const User = require("../models/Users");
+
+// Create a new user
+router.post("/", async (req, res) => {
+  try {
+    const {
+      email,
+      password,
+      username,
+      // accountType,
+    } = req.body;
+
+    const newUser = await User.create({
+      email,
+      password,
+      username,
+      // accountType,
+    });
+
+    res.status(201).json(newUser);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get a list of all users
+router.get("/", async (req, res) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Fetching a Single User:
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update a user (PUT)
+router.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const updatedUserData = req.body;
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(id, updatedUserData, {
+      new: true,
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Delete a user
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedUser = await User.findByIdAndDelete(id);
+    if (!deletedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.status(204).end(); // No content, successful deletion
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+module.exports = router;
+// split backend and front end
+
+routes/Auth.js
+const { Signup, Login } = require("../controllers/AuthController");
+const { userVerification } = require("../middleware/AuthMiddleware");
+const router = require("express").Router();
+
+router.post("/signup", Signup);
+router.post("/login", Login);
+router.post("/home", userVerification);
+
+module.exports = router;
+
+util/SecretToken.js
+// setup a function to handle the generation of a atoken
+
+require("dotenv").config();
+
+const jwt = require("jsonwebtoken");
+
+module.exports.createSecretToken = (id) => {
+  return jwt.sign({ id }, process.env.TOKEN_KEY, {
+    expiresIn: 3 * 24 * 60 * 60,
+  });
+};
+
+models/Tickets.js
+const mongoose = require("mongoose");
+
+const ticketSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    trim: true, // Remove leading/trailing white spaces
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  status: {
+    type: String,
+    enum: ["Open", "Pending", "Resolved"],
+    default: "Open",
+  },
+  dateCreated: {
+    type: Date,
+    default: Date.now,
+  },
+  createdBy: {
+    type: String,
+    required: true,
+  },
+  assignedTo: {
+    type: String,
+    required: true,
+  },
+  // createdBy: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "User", // Reference to the user who created the ticket
+  // },
+  // assignedTo: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "User", // Reference to the user who is assigned to the ticket
+  // },
+});
+
+module.exports = mongoose.model("Ticket", ticketSchema);
+
+
+models/Users.js
+
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+
+const userSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: [true, "Your email address is required"],
+    unique: true,
+  },
+  username: {
+    type: String,
+    required: [true, "Your username is required"],
+  },
+  password: {
+    type: String,
+    required: [true, "Your password is required"],
+  },
+  // accountType: {
+  //   type: String,
+  // enum: ["Admin", "User"],
+  // required: true,
+  // },
+  createdAt: {
+    type: Date,
+    default: new Date(),
+  },
+});
+
+// The password is hashed for security reasons prior to saving the user.
+userSchema.pre("save", async function () {
+  this.password = await bcrypt.hash(this.password, 12);
+});
+
+module.exports = mongoose.model("User", userSchema);
+
+controllers/AuthController.js
+/*
+ The user's inputs are obtained from the req.body in the code above, and you then check the email to make sure no past registrations have been made. We'll use the values obtained from req.body to create the new user after that has occurred.
+
+You don't need to worry about how the unique _id was obtained because MongoDB always assigns a new user with a unique _id
+
+The newly formed user's _id is then supplied as an parameter to the createSecretToken() function, which handles token generation.
+
+The cookie will be sent to the client with key of "token", and value of token.
+ */
+const User = require("../models/Users");
+const { createSecretToken } = require("../util/SecretToken");
+const bcrypt = require("bcryptjs");
+
+module.exports.Signup = async (req, res, next) => {
+  try {
+    console.log(req.body);
+    const { email, password, username, createdAt } = req.body;
+    if (!email) {
+      return res.json({ message: "Missing email field." });
+    }
+    if (!password) {
+      return res.json({ message: "Missing password field." });
+    }
+    if (!username) {
+      return res.json({ message: "Missing username field." });
+    }
+    // if (!accountType) {
+    //   return res.json({ message: "Missing accountType field." });
+    // }
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.json({ message: "User already exists" });
+    }
+    const user = await User.create({ email, password, username, createdAt });
+    const token = createSecretToken(user._id);
+    res.cookie("token", token, {
+      withCredentials: true,
+      httpOnly: false,
+    });
+    res
+      .status(201)
+      .json({ message: "User signed in successfully", success: true, user });
+    next();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+module.exports.Login = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    if (!email && !password) {
+      return res.json({ message: "All fields are missing." });
+    }
+    if (!email) {
+      return res.json({ message: "Missing email field." });
+    }
+    if (!password) {
+      return res.json({ message: "Missing password field." });
+    }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.json({ message: "User does not exist." });
+    }
+    const auth = await bcrypt.compare(password, user.password);
+    if (!auth) {
+      return res.json({ message: "Incorrect password." });
+    }
+    const token = createSecretToken(user._id);
+    res.cookie("token", token, {
+      withCredentials: true,
+      httpOnly: false,
+    });
+    res
+      .status(201)
+      .json({ message: "User logged in successfully", success: true });
+    next();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+middleware/AuthMiddleware.js
+// checks if the user has access to the route by checking if the tokens match
+const User = require("../models/Users");
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
+
+module.exports.userVerification = (req, res) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.json({ status: false });
+  }
+  jwt.verify(token, process.env.TOKEN_KEY, async (err, data) => {
+    if (err) {
+      return res.json({ status: false });
+    } else {
+      const user = await User.findById(data.id);
+      if (user) return res.json({ status: true, user: user.username });
+      else return res.json({ status: false });
+    }
+  });
+};

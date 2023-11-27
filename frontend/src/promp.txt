@@ -1,0 +1,561 @@
+
+index.js
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import { BrowserRouter } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+
+import { AuthProvider } from "./context/AuthContext";
+import { TicketProvider } from "./context/TicketContext";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+    <AuthProvider>
+      <TicketProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </TicketProvider>
+    </AuthProvider>
+  </React.StrictMode>,
+);
+
+App.js
+// App.js
+// import React from "react";
+import { Route, Routes } from "react-router-dom";
+// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// import PrivateRoute from "./components/common/PrivateRoute";
+// import AdminDashboard from "./components/Admin/AdminDashboard";
+// import TicketView from "./components/Admin/TicketView";
+import UserLandingPage from "./components/User/UserLandingPage";
+import CreateTicketForm from "./components/User/CreateTicketForm";
+import UserDashboard from "./components/User/UserDashboard";
+import UserTicketView from "./components/User/UserTicketView";
+
+import { Login, Signup } from "./pages";
+import Home from "./pages/Home";
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/home" element={<Home />} />
+      <Route path="/" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+
+      <Route path="/user/*" element={<UserLandingPage />} />
+      <Route path="/user/create" element={<CreateTicketForm />} />
+      <Route path="/user/dashboard/*" element={<UserDashboard />} />
+      <Route path="/user/ticket/:id" element={<UserTicketView />} />
+    </Routes>
+  );
+}
+// <Route path="/admin/dashboard" element={<AdminDashboard />} />
+// <Route path="/admin/ticket/:id" element={<TicketView />} />
+//
+
+export default App;
+
+pages/index.js
+export { default as Login } from "./Login";
+export { default as Signup } from "./Signup";
+export { default as Home } from "./Home";
+
+pages/Login.jsx
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+
+const Login = () => {
+  const navigate = useNavigate();
+  const [inputValue, setInputValue] = useState({
+    email: "",
+    password: "",
+  });
+  const { email, password } = inputValue;
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+    setInputValue({
+      ...inputValue,
+      [name]: value,
+    });
+  };
+
+  const handleError = (err) =>
+    toast.error(err, {
+      position: "bottom-left",
+    });
+  const handleSuccess = (msg) =>
+    toast.success(msg, {
+      position: "bottom-left",
+    });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await axios.post(
+        "http://localhost:4000/api/auth/login",
+        {
+          ...inputValue,
+        },
+        { withCredentials: true },
+      );
+      console.log(data);
+      const { success, message } = data;
+      if (success) {
+        handleSuccess(message);
+        setTimeout(() => {
+          navigate("/user");
+        }, 1000);
+      } else {
+        handleError(message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setInputValue({
+      ...inputValue,
+      email: "",
+      password: "",
+    });
+  };
+
+  return (
+    <div className="form_container">
+      <h2>Login Account</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            name="email"
+            value={email}
+            placeholder="Enter your email"
+            onChange={handleOnChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            name="password"
+            value={password}
+            placeholder="Enter your password"
+            onChange={handleOnChange}
+          />
+        </div>
+        <button type="submit">Submit</button>
+        <span>
+          Already have an account? <Link to={"/signup"}>Signup</Link>
+        </span>
+      </form>
+      <ToastContainer />
+    </div>
+  );
+};
+
+export default Login;
+
+pages/Signup.jsx
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+
+const Signup = () => {
+  const navigate = useNavigate();
+  const [inputValue, setInputValue] = useState({
+    email: "",
+    password: "",
+    username: "",
+  });
+  const { email, password, username } = inputValue;
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+    setInputValue({
+      ...inputValue,
+      [name]: value,
+    });
+  };
+
+  const handleError = (err) =>
+    toast.error(err, {
+      position: "bottom-left",
+    });
+  const handleSuccess = (msg) =>
+    toast.success(msg, {
+      position: "bottom-right",
+    });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await axios.post(
+        "http://localhost:4000/api/auth/signup",
+        {
+          ...inputValue,
+        },
+        { withCredentials: true },
+      );
+      const { success, message } = data;
+      if (success) {
+        handleSuccess(message);
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      } else {
+        handleError(message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setInputValue({
+      ...inputValue,
+      email: "",
+      password: "",
+      username: "",
+    });
+  };
+
+  return (
+    <div className="form_container">
+      <h2>Signup Account</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            name="email"
+            value={email}
+            placeholder="Enter your email"
+            onChange={handleOnChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="email">Username</label>
+          <input
+            type="text"
+            name="username"
+            value={username}
+            placeholder="Enter your username"
+            onChange={handleOnChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            name="password"
+            value={password}
+            placeholder="Enter your password"
+            onChange={handleOnChange}
+          />
+        </div>
+        <button type="submit">Submit</button>
+        <span>
+          Already have an account? <Link to={"/login"}>Login</Link>
+        </span>
+      </form>
+      <ToastContainer />
+    </div>
+  );
+};
+
+export default Signup;
+
+context/AuthContext.js
+import { createContext, useContext, useState } from "react";
+
+const AuthContext = createContext();
+
+const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+
+  const login = (userData) => {
+    // Perform authentication logic, set user if successful
+    setUser(userData);
+  };
+
+  const logout = () => {
+    // Perform logout logic, set user to null
+    setUser(null);
+  };
+
+  const value = {
+    user,
+    login,
+    logout,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
+
+const useAuth = () => {
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+
+  return context;
+};
+
+export { AuthProvider, useAuth, AuthContext };
+
+
+context/TicketContext.js
+// TicketContext.js
+import { createContext, useContext, useState } from "react";
+
+const TicketContext = createContext();
+
+export const TicketProvider = ({ children }) => {
+  const [createdBy, setCreatedBy] = useState(null);
+
+  const setCreatedByUser = (userEmail) => {
+    setCreatedBy(userEmail);
+  };
+
+  return (
+    <TicketContext.Provider value={{ createdBy, setCreatedByUser }}>
+      {children}
+    </TicketContext.Provider>
+  );
+};
+
+export const useTicket = () => {
+  const context = useContext(TicketContext);
+  if (!context) {
+    throw new Error("useTicket must be used within a TicketProvider");
+  }
+  return context;
+};
+
+components/User/CreateTicketForm.js
+
+import React, { useState, useContext } from "react";
+import axios from "axios";
+import { AuthContext } from "../../context/AuthContext"; // Make sure the path is correct
+
+const CreateTicketForm = () => {
+  const { auth } = useContext(AuthContext); // Assuming you have an AuthContext
+
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
+  const handleTitleChange = (e) => {
+    setTitle(e.target.value);
+  };
+
+  const handleDescriptionChange = (e) => {
+    setDescription(e.target.value);
+  };
+
+  const handleCreateTicket = async () => {
+    try {
+      const createdBy = auth.user ? auth.user.email : null;
+
+      const response = await axios.post(
+        "http://localhost:4000/api/ticket/create",
+        {
+          title,
+          description,
+          createdBy,
+        },
+      );
+
+      // Provide visual confirmation here if needed
+      console.log("Ticket created successfully!");
+      console.log("Created Ticket:", response.data);
+
+      // You might want to redirect the user or perform additional actions
+    } catch (error) {
+      console.error("Error creating ticket:", error);
+    }
+  };
+
+  return (
+    <div>
+      <h2>Create Ticket</h2>
+      <label>
+        Title:
+        <input type="text" value={title} onChange={handleTitleChange} />
+      </label>
+      <br />
+      <label>
+        Description:
+        <textarea value={description} onChange={handleDescriptionChange} />
+      </label>
+      <br />
+      <button onClick={handleCreateTicket}>Create Ticket</button>
+    </div>
+  );
+};
+
+export default CreateTicketForm;
+
+components/User/UserDashboard
+// components/User/UserDashboard.js
+import React, { useState } from "react";
+import axios from "axios";
+import { Link, Routes, Route } from "react-router-dom";
+import UserTicketView from "./UserTicketView";
+
+const UserDashboard = () => {
+  const [userName, setUserName] = useState("");
+  const [userTickets, setUserTickets] = useState([]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      // Fetch tickets created by the specified user
+      const response = await axios.get(
+        `http://localhost:4000/api/ticket/user/${userName}`,
+      );
+
+      setUserTickets(response.data);
+    } catch (error) {
+      console.error("Error fetching user tickets:", error);
+    }
+  };
+
+  return (
+    <div>
+      <h2>User Dashboard</h2>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Enter Your Name:
+          <input
+            type="text"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+            placeholder="Enter your name"
+          />
+        </label>
+        <button type="submit">Submit</button>
+      </form>
+      {userTickets.length > 0 && (
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Status</th>
+              <th>View</th>
+            </tr>
+          </thead>
+          <tbody>
+            {userTickets.map((ticket) => (
+              <tr key={ticket._id}>
+                <td>{ticket.title}</td>
+                <td>{ticket.description}</td>
+                <td>{ticket.status}</td>
+                <td>
+                  <Link to={`/user/ticket/${ticket._id}`}>
+                    <button>View</button>
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      <Routes>
+        <Route path="/user/ticket/:ticketId" element={<UserTicketView />} />
+      </Routes>
+    </div>
+  );
+};
+
+export default UserDashboard;
+
+components/User/UserLandingPage
+// components/User/UserLandingPage.js
+import React from "react";
+import { Link, Routes, Route } from "react-router-dom";
+import CreateTicketForm from "./CreateTicketForm";
+import UserDashboard from "./UserDashboard";
+
+const UserLandingPage = () => {
+  return (
+    <div>
+      <h2>User Landing Page</h2>
+      <ul>
+        <li>
+          <Link to="/user/create">Create Ticket</Link>
+        </li>
+        <li>
+          <Link to="/user/dashboard">My Tickets</Link>
+        </li>
+      </ul>
+
+      {/* Use Routes to handle navigation */}
+      <Routes>
+        <Route path="/user/create" element={<CreateTicketForm />} />
+        <Route path="/user/dashboard" element={<UserDashboard />} />
+      </Routes>
+    </div>
+  );
+};
+
+export default UserLandingPage;
+
+components/User/UserTicketView
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+
+const UserTicketView = () => {
+  const [ticket, setTicket] = useState(null);
+  const { ticketId } = useParams();
+
+  useEffect(() => {
+    console.log("Effect Triggered");
+
+    if (!ticketId) {
+      return; // Don't proceed if ticketId is undefined
+    }
+
+    const fetchTicketDetails = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/api/ticket/${ticketId}`,
+        );
+        const { data } = response;
+        setTicket(data);
+      } catch (error) {
+        console.error("Error fetching ticket details:", error.response);
+      }
+    };
+
+    fetchTicketDetails();
+
+    // Cleanup function to run when the component is unmounted
+    return () => {
+      setTicket(null); // Clear the state to prevent updating unmounted component
+    };
+  }, [ticketId]);
+
+  if (!ticket) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div>
+      <h2>Ticket View</h2>
+      <p>Title: {ticket.title}</p>
+      <p>Description: {ticket.description}</p>
+      <p>Status: {ticket.status}</p>
+      <p>Created By: {ticket.createdBy}</p>
+      <p>Assigned To: {ticket.assignedTo}</p>
+      <p>Date Created: {new Date(ticket.dateCreated).toLocaleString()}</p>
+    </div>
+  );
+};
+
+export default UserTicketView;

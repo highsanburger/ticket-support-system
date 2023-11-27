@@ -1,58 +1,34 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
-  firstName: {
-    type: String,
-    required: true,
-  },
-  lastName: {
-    type: String,
-    required: true,
-  },
   email: {
     type: String,
-    required: true,
+    required: [true, "Your email address is required"],
     unique: true,
+  },
+  username: {
+    type: String,
+    required: [true, "Your username is required"],
   },
   password: {
     type: String,
-    required: true,
+    required: [true, "Your password is required"],
   },
-  accountType: {
-    type: String,
-    required: true,
-  },
-  active: {
-    type: Boolean,
-    default: true,
-  },
-  approved: {
-    type: Boolean,
-    default: false,
-  },
-  // tickets: [
-  //   {
-  //     type: mongoose.Schema.Types.ObjectId,
-  //     ref: "Ticket",
-  //   },
-  // ],
-  // image: {
+  // accountType: {
   //   type: String,
+  // enum: ["Admin", "User"],
+  // required: true,
   // },
-  // ticketProgress: [
-  //   {
-  //     type: mongoose.Schema.Types.ObjectId,
-  //     ref: "Ticket",
-  //   },
-  // ],
-  // createdAt: {
-  //   type: Date,
-  //   default: Date.now,
-  // },
-  // updatedAt: {
-  //   type: Date,
-  //   default: Date.now,
-  // },
+  createdAt: {
+    type: Date,
+    default: new Date(),
+  },
+});
+
+// The password is hashed for security reasons prior to saving the user.
+userSchema.pre("save", async function () {
+  this.password = await bcrypt.hash(this.password, 12);
 });
 
 module.exports = mongoose.model("User", userSchema);

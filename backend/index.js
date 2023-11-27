@@ -1,63 +1,48 @@
-const express = require("express");
+// Accessing .env
+require("dotenv").config();
+const { MONGO_URL, PORT } = process.env;
+
+// Connection to MongoDB
 const mongoose = require("mongoose");
-const cors = require("cors");
-const dotenv = require("dotenv");
-
-const fileUpload = require("express-fileupload");
-// const createRoutes = require("./routes/createRoutes");
-// const { cloudnairyconnect } = require("./config/cloudinary");
-dotenv.config();
-
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URL, {
-  // DEPLOY
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "MongoDB connection error:"));
-db.once("open", () => {
-  console.log("Connected to MongoDB");
-});
+mongoose
+  .connect(MONGO_URL)
+  .then(() => console.log("MongoDB connected successfully"))
+  .catch((err) => console.error(err));
 
 // Initialize Express app
+const express = require("express");
 const app = express();
-const PORT = process.env.PORT || 8080;
 
 // Middleware
+
+// add a body property to the req object
 app.use(express.json());
-// app.use(
-//   cors({
-//     origin: JSON.parse(process.env.CORS_ORIGIN),
-//     credentials: true,
-//     maxAge: 14400,
-//   }),
-// );
-// app.use(cookieParser());
+
+// allow requests from other domains to access the resources on your server
+const cors = require("cors");
 app.use(
-  fileUpload({
-    useTempFiles: true,
-    tempFileDir: "/tmp",
+  cors({
+    origin: "http://localhost:3000",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true, // Enable credentials (cookies, authorization headers, etc.)
   }),
 );
-// cloudnairyconnect();
 
-// Import models
-const Ticket = require("./models/Tickets");
-const User = require("./models/Users");
+// manages cookie-based sessions or extracts data from cookies
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
 
-// Routes
-const userRoutes = require("./routes/User");
-const ticketRoutes = require("./routes/Ticket");
-// const profileRoutes = require("./routes/Profile");
-// const contactRoutes = require("./routes/ContactUs");
+// // Import models
+// const Ticket = require("./models/Tickets");
+// const User = require("./models/Users");
 
-// Use routers
-app.use("/api/auth", userRoutes);
-app.use("/api/ticket", ticketRoutes);
-// app.use("/api/tickets", createRoutes);
-// app.use("/api/profile", profileRoutes);
-// app.use("/api/contact", contactRoutes);
+const userRoute = require("./routes/User");
+const ticketRoute = require("./routes/Ticket");
+// const authRoute = require("./routes/Auth");
+
+app.use("/api/user/", userRoute);
+app.use("/api/ticket", ticketRoute);
+// app.use("/api/auth/", authRoute);
 
 // Welcome message
 app.get("/", (req, res) => {
