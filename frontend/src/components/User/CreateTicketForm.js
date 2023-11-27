@@ -1,10 +1,10 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
-import { AuthContext } from "../../context/AuthContext"; // Correct the path if needed
+// import { AuthContext } from "../../context/AuthContext"; // Correct the path if needed
 import "./CreateTicketForm.css"; // Import CSS file
 
 const CreateTicketForm = () => {
-  const { user } = useContext(AuthContext); // Change 'auth' to 'user' since 'user' is the property in the context
+  // const { user } = useContext(AuthContext); // Change 'auth' to 'user' since 'user' is the property in the context
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -19,7 +19,7 @@ const CreateTicketForm = () => {
 
   const handleCreateTicket = async () => {
     try {
-      const createdBy = user ? user.email : null; // Change 'auth.user' to 'user'
+      // const createdBy = user ? user.email : null; // Change 'auth.user' to 'user'
 
       const response = await axios.post(
         "http://localhost:4000/api/ticket/create",
@@ -40,28 +40,26 @@ const CreateTicketForm = () => {
     }
   };
 
-
-return (
-  <div className="create-ticket-container2" >
-    <div className="create-ticket-container"> {/* Apply CSS class to the main container */}
-    <h2>Create Ticket</h2>
-    <label>
-      Title:
-      
-      <input type="text" value={title} onChange={handleTitleChange} />
-    </label>
-    <br />
-    <label>
-      Description:
-      <textarea value={description} onChange={handleDescriptionChange} />
-    </label>
-    <br />
-    <button onClick={handleCreateTicket}>Create Ticket</button>
-  </div>
-
-  </div>
-  
-);
+  return (
+    <div className="create-ticket-container2">
+      <div className="create-ticket-container">
+        {" "}
+        {/* Apply CSS class to the main container */}
+        <h2>Create Ticket</h2>
+        <label>
+          Title:
+          <input type="text" value={title} onChange={handleTitleChange} />
+        </label>
+        <br />
+        <label>
+          Description:
+          <textarea value={description} onChange={handleDescriptionChange} />
+        </label>
+        <br />
+        <button onClick={handleCreateTicket}>Create Ticket</button>
+      </div>
+    </div>
+  );
 };
 
 export default CreateTicketForm;

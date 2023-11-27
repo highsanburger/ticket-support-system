@@ -10,14 +10,14 @@ import CreateTicketForm from "./components/User/CreateTicketForm";
 import UserDashboard from "./components/User/UserDashboard";
 import UserTicketView from "./components/User/UserTicketView";
 
-import { Login, Signup } from "./pages";
-import Home from "./pages/Home";
+// import { Login, Signup } from "./pages";
+// import Home from "./pages/Home";
 
 function App() {
   return (
     <Routes>
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
- <Route path="/admin/ticket/:id" element={<TicketView />} />
+      <Route path="/admin/ticket/:id" element={<TicketView />} />
 
       <Route path="/user/*" element={<UserLandingPage />} />
       <Route path="/user/create" element={<CreateTicketForm />} />

@@ -36,13 +36,13 @@ app.use(cookieParser());
 // const Ticket = require("./models/Tickets");
 // const User = require("./models/Users");
 
-// const userRoute = require("./routes/User");
+const userRoute = require("./routes/User");
 const ticketRoute = require("./routes/Ticket");
-const authRoute = require("./routes/Auth");
+// const authRoute = require("./routes/Auth");
 
-// app.use("/api/auth/", userRoute);
+app.use("/api/user/", userRoute);
 app.use("/api/ticket", ticketRoute);
-app.use("/api/auth/", authRoute);
+// app.use("/api/auth/", authRoute);
 
 // Welcome message
 app.get("/", (req, res) => {

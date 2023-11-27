@@ -23,10 +23,10 @@ const ticketSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  assignedTo: {
-    type: String,
-    required: true,
-  },
+  // assignedTo: {
+  //   type: String,
+  //   required: true,
+  // },
   // createdBy: {
   //   type: mongoose.Schema.Types.ObjectId,
   //   ref: "User", // Reference to the user who created the ticket
