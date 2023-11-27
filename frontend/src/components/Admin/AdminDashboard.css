@@ -16,32 +16,34 @@ table {
 }
 
 th, td {
-  border: 1px solid #420bf5;
+  border: 1px solid#5072A7;
   padding: 8px;
   text-align: left;
 }
 
 th {
-  background-color: #a8d5f1;
+  background-color: #a8d5f1c8;
 }
 
 tbody tr:nth-child(even) {
-  background-color: #e99393;
+  background-color:#3457D5;
 }
 
 tbody tr:hover {
-  background-color: #c82222;
+  background-color: #2a52be;
 }
 
 button {
   padding: 5px 10px;
   background-color: #007bff;
-  color: white;
+  color: #0056b3;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color:#034694;
+  transition: 2s;
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 }
