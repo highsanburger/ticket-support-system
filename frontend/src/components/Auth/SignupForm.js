@@ -1,16 +1,13 @@
 // components/Auth/SignupForm.js
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-import { registerUser } from "../../actions/authActions";
-
+import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const SignupForm = () => {
   const dispatch = useDispatch();
-
-  // Local component state to manage form inputs
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -18,52 +15,55 @@ const SignupForm = () => {
 
   const { email, password } = formData;
 
-  // Handle form input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Email and password validation regex
     const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-    const v1 = EMAIL_REGEX.test(email);
-    const v2 = PWD_REGEX.test(password);
+    const isValidEmail = EMAIL_REGEX.test(email);
+    const isValidPassword = PWD_REGEX.test(password);
 
-    if (!v1) {
+    if (!isValidEmail) {
       toast.error("Invalid email.");
-    } else if (!v2) {
-      toast.error(
-        "Password must contain at least one lowercase letter, uppercase letter, digit, special character from the set !@#$% & be between 8 and 24 characters.",
-      );
+    } else if (!isValidPassword) {
+      toast.error("Password must meet the specified criteria.");
     } else {
       try {
-        // Dispatch the registerUser action with form data
-        const response = await dispatch(registerUser(email, password));
+        const response = await fetch(
+          "http://localhost:4000/api/user/register",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, password }),
+          },
+        );
 
-        // Check response and show appropriate messages
-        if (response && response.payload && response.payload.user) {
+        const data = await response.json();
+
+        if (response.ok) {
           toast.success("Registration successful!");
-          // Optionally, you can redirect the user after successful registration
-          // history.push('/login');
-        } else if (response && response.payload && response.payload.error) {
-          toast.error(response.payload.error);
+          setTimeout(() => {
+            // Navigate after waiting
+            navigate("/user");
+          }, 2000);
+
+          // Log the user ID and token to the console
+          console.log("User ID:", data.user);
+          console.log("Token:", data.token);
+
+          // Optionally, handle successful registration, e.g., redirect the user
         } else {
-          toast.error("An error occurred during registration");
+          toast.error(data.error || "An error occurred during registration");
         }
       } catch (error) {
-        console.log(error.response.data.error);
-        console.log(error.response.status);
-        if (error.response.status === 501) {
-          console.log("t");
-          toast.error(error.response.data.error);
-        } else {
-          console.error("Login Error:", error);
-          toast.error("An error occurred during signup");
-        }
+        console.error("Registration Error:", error);
+        toast.error("An error occurred during registration");
       }
     }
   };

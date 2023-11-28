@@ -2,3 +2,4 @@
 - user autherization
 - maybe move away from localStorage?
 - comments in ticketview
+- cleaner error handling (backend, schema)

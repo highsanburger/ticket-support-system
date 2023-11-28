@@ -4,29 +4,55 @@ const router = express.Router();
 const User = require("../models/Users");
 const bcrypt = require("bcryptjs");
 
-// Register
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
+
+// create json web token
+const maxAge = 3 * 24 * 60 * 60; // 3 days
+const createToken = (id) => {
+  return jwt.sign({ id }, "net ninja secret", {
+    expiresIn: maxAge,
+  });
+};
+
 router.post("/register", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Check if a user with the provided email already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(501).json({ error: "User already exists." });
-    }
-
     // If the user does not exist, create a new user
-    const newUser = await User.create({
-      email,
-      password,
-    });
+    const user = await User.create({ email, password });
+    const token = createToken(user._id);
+    res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
+    // const token = newUser.generateAuthToken();
 
-    const token = newUser.generateAuthToken();
-    res.status(201).json({ user: newUser, token });
+    res.status(201).json({ user: user._id, token: token });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+// Register
+// router.post("/register", async (req, res) => {
+//   try {
+//     const { email, password } = req.body;
+//
+//     // Check if a user with the provided email already exists
+//     const existingUser = await User.findOne({ email });
+//     if (existingUser) {
+//       return res.status(501).json({ error: "User already exists." });
+//     }
+//
+//     // If the user does not exist, create a new user
+//     const newUser = await User.create({
+//       email,
+//       password,
+//     });
+//
+//     const token = newUser.generateAuthToken();
+//     res.status(201).json({ user: newUser, token });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
 // Login
 router.post("/login", async (req, res) => {
   try {
