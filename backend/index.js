@@ -38,11 +38,11 @@ app.use(cookieParser());
 
 const userRoute = require("./routes/User");
 const ticketRoute = require("./routes/Ticket");
-const authRoute = require("./routes/Auth");
+// const authRoute = require("./routes/Auth");
 
-app.use("/api/user/", userRoute);
+app.use("/api/", userRoute);
 app.use("/api/ticket", ticketRoute);
-app.use("/api/auth/", authRoute);
+// app.use("/api/auth/", authRoute);
 
 // Welcome message
 app.get("/", (req, res) => {
