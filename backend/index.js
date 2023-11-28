@@ -40,7 +40,7 @@ const userRoute = require("./routes/User");
 const ticketRoute = require("./routes/Ticket");
 // const authRoute = require("./routes/Auth");
 
-app.use("/api/user/", userRoute);
+app.use("/api/", userRoute);
 app.use("/api/ticket", ticketRoute);
 // app.use("/api/auth/", authRoute);
 

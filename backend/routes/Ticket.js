@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Ticket = require("../models/Tickets");
 
+const { requireAuth } = require("../middleware/Auth");
+
 // Create a new ticket
 router.post("/create", async (req, res) => {
   try {
@@ -20,7 +22,7 @@ router.post("/create", async (req, res) => {
 });
 
 // Get a list of all tickets
-router.get("/", async (req, res) => {
+router.get("/", requireAuth, async (req, res) => {
   try {
     const tickets = await Ticket.find();
     res.status(200).json(tickets);
@@ -32,7 +34,7 @@ router.get("/", async (req, res) => {
 // Define other CRUD routes such as fetching a single ticket, updating, and deleting
 
 // get tickets by createdBy
-router.get("/user/:createdBy", async (req, res) => {
+router.get("/user/:createdBy", requireAuth, async (req, res) => {
   try {
     const createdBy = req.params.createdBy;
     const userTickets = await Ticket.find({ createdBy: createdBy });
