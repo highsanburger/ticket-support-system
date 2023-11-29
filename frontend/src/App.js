@@ -8,6 +8,7 @@ import UserDashboard from "./components/User/UserDashboard";
 import UserTicketView from "./components/User/UserTicketView";
 
 import Login from "./components/Auth/Login"; // Import the LoginForm component
+import Logout from "./components/Auth/Logout";
 import Signup from "./components/Auth/Signup"; // Import the LoginForm component
 import ProtectUser from "./components/Auth/ProtectUser";
 import ProtectAdmin from "./components/Auth/ProtectAdmin";
@@ -24,6 +25,10 @@ function App() {
       <Route
         path="/login"
         element={<Login loginUrl={"http://localhost:4000/api"} />}
+      />
+      <Route
+        path="/logout"
+        element={<Logout logoutUrl={"http://localhost:4000/api"} />}
       />
       {/* Admin routes */}
       <Route element={<ProtectAdmin />}>

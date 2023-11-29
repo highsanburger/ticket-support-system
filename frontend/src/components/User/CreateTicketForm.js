@@ -7,6 +7,7 @@ import { useSelector } from "react-redux"; // Import the useSelector hook
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import Cookies from "js-cookie"; // Import the Cookies library
 const CreateTicketForm = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
@@ -27,7 +28,7 @@ const CreateTicketForm = () => {
   const handleCreateTicket = async () => {
     try {
       // const createdBy = "imsyedkhalid@gmail.com";
-      const userEmail = localStorage.getItem("userEmail");
+      const userEmail = Cookies.get("email");
       const createdBy = userEmail ? userEmail : "email";
       const status = "Open";
 

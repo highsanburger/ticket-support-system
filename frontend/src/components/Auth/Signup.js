@@ -1,92 +1,62 @@
+// frontend/src/components/Auth/Signup.js
 import React, { useState } from "react";
+import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 
 const Signup = ({ signUpUrl }) => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
 
-    // Check if passwords match
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords don't match");
-      return;
-    }
-
-    // Send a POST request using Axios
     try {
-      const response = await axios.post(`${signUpUrl}/signup`, {
-        email: formData.email,
-        password: formData.password,
-      });
+      // Your signup API call using axios here
+      // Example:
+      const response = await axios.post(signUpUrl, { email, password });
 
-      // Assuming a successful response has a status of 2xx
-      if (response.status >= 200 && response.status < 300) {
-        // Successful signup
-        alert("Signup successful!");
+      // Handle successful signup
+      // Example: Set user data in state, update context, etc.
+      // ...
 
-        // Store user ID and token in cookies
-        document.cookie = `userId=${response.data.user}; max-age=${response.data.token.expiresIn}`;
-        document.cookie = `token=${response.data.token}; max-age=${response.data.token.expiresIn}`;
-      } else {
-        // Handle errors
-        alert(`Error: ${response.data.errors}`);
-      }
+      // Redirect to user landing page after successful signup
+      return <Navigate to="/user" />;
     } catch (error) {
-      // Handle network errors or other issues
-      console.error("Error during signup:", error.message);
+      // Handle signup error
+      setError("Signup failed");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Email:
+    <div>
+      <h2>Signup</h2>
+      <form onSubmit={handleSignup}>
+        <label>Email:</label>
         <input
           type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
-      </label>
-      <br />
-      <label>
-        Password:
+        <label>Password:</label>
         <input
           type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           required
         />
-      </label>
-      <br />
-      <label>
-        Confirm Password:
-        <input
-          type="password"
-          name="confirmPassword"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          required
-        />
-      </label>
-      <br />
-      <button type="submit">Sign Up</button>
-    </form>
+        <button type="submit">Sign up</button>
+      </form>
+
+      {/* Display an error message if signup fails */}
+      {error && <p>{error}</p>}
+
+      {/* Link to the login page if already a user */}
+      <p>
+        Already a user? <Link to="/login">Login here</Link>.
+      </p>
+    </div>
   );
 };
 

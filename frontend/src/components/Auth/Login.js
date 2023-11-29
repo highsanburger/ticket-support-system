@@ -32,9 +32,22 @@ const Login = ({ loginUrl }) => {
       console.log(response.data);
 
       // Assuming a successful response has a status of 2xx
-      if (response.status >= 200 && response.status < 300) {
+      if (
+        response.status >= 200 &&
+        response.status < 300 &&
+        formData.email === "admin@tss.com"
+      ) {
         // Successful login
-        alert("Login successful!");
+        alert("Admin Login successful!");
+        navigate("/admin/dashboard");
+
+        // Store user ID and token in cookies
+        document.cookie = `id=${response.data.user}; max-age=${response.data.token.expiresIn}`;
+        document.cookie = `token=${response.data.token}; max-age=${response.data.token.expiresIn}`;
+        document.cookie = `email=${response.data.email}; max-age=${response.data.token.expiresIn}`;
+      } else if (response.status >= 200 && response.status < 300) {
+        // Successful login
+        alert("User Login successful!");
         navigate("/user");
 
         // Store user ID and token in cookies

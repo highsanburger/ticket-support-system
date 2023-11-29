@@ -1,7 +1,7 @@
-// /middleware/Auth.js
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { TOKEN_KEY } = process.env;
+const User = require("../models/Users");
 
 // create json web token
 const maxAge = 3 * 24 * 60 * 60; // 3 days
@@ -30,6 +30,25 @@ const requireAuth = (req, res, next) => {
   }
 };
 
+// check current user
+const checkUser = (req, res, next) => {
+  const token = req.cookies.jwt;
+  if (token) {
+    jwt.verify(token, TOKEN_KEY, async (err, decodedToken) => {
+      if (err) {
+        res.locals.user = null;
+        next();
+      } else {
+        let user = await User.findById(decodedToken.id);
+        res.locals.user = user;
+        next();
+      }
+    });
+  } else {
+    res.locals.user = null;
+    next();
+  }
+};
 const handleErrors = (err) => {
   console.log(err.message, err.code);
   let errors = { email: "", password: "" };
@@ -74,6 +93,7 @@ const handleErrors = (err) => {
 module.exports = {
   createToken,
   requireAuth,
+  checkUser,
   handleErrors,
   maxAge,
 };

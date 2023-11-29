@@ -33,4 +33,22 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.post("/logout", (req, res) => {
+  // Clear the token from the client by setting an expired cookie
+  res.clearCookie("jwt"); // Assuming your token is named "jwt"
+
+  // You can also perform additional cleanup or actions related to logging out
+
+  // Redirect the client to the home page or any desired page
+  res.status(200).json({ message: "Logout successful" });
+});
+// router.post("/logout", (req, res) => {
+//   // Clear the token from the client by setting an expired cookie
+//   res.cookie("token", "", { expires: new Date(0) });
+//
+//   // You can also perform additional cleanup or actions related to logging out
+//
+//   // Send a response indicating successful logout
+//   res.status(200).json({ message: "Logout successful" });
+// });
 module.exports = router;

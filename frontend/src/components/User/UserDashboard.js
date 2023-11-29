@@ -1,9 +1,8 @@
-// components/User/UserDashboard.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, Routes, Route, useNavigate } from "react-router-dom";
 import UserTicketView from "./UserTicketView";
-
+import Cookies from "js-cookie"; // Import the Cookies library
 import { useSelector } from "react-redux"; // Import the useSelector hook
 
 const UserDashboard = () => {
@@ -13,7 +12,8 @@ const UserDashboard = () => {
   // const user = useSelector((state) => state.auth.user);
   // const userEmail = user ? user.email : null; // Extract email if the user object exists
 
-  const userEmail = localStorage.getItem("userEmail");
+  // Use Cookies to get the email from the cookie
+  const userEmail = Cookies.get("email");
   console.log(userEmail);
   // Hardcoded createdBy value
   const createdBy = userEmail ? userEmail : "email";

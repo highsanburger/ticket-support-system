@@ -25,6 +25,10 @@ const UserLandingPage = () => {
         <Route path="/user/create" element={<CreateTicketForm />} />
         <Route path="/user/dashboard" element={<UserDashboard />} />
       </Routes>
+      <p>
+        {" "}
+        <Link to="/logout"> Logout.</Link>{" "}
+      </p>
     </div>
   );
 };
