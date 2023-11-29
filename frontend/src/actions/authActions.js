@@ -4,10 +4,13 @@ import axios from "axios";
 
 export const loginUser = (email, password) => async (dispatch) => {
   try {
-    const response = await axios.post("http://localhost:4000/api/user/login", {
-      email,
-      password,
-    });
+    const response = await axios.post(
+      "https://ticket-support-system-q1k0.onrender.com/api/user/login",
+      {
+        email,
+        password,
+      },
+    );
     dispatch({
       type: "LOGIN_USER",
       payload: response.data, // Return the entire response
@@ -24,7 +27,7 @@ export const loginUser = (email, password) => async (dispatch) => {
 export const registerUser = (email, password, username) => async (dispatch) => {
   try {
     const response = await axios.post(
-      "http://localhost:4000/api/user/register",
+      "https://ticket-support-system-q1k0.onrender.com/api/user/register",
       {
         email,
         password,

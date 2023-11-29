@@ -19,16 +19,16 @@ function App() {
       {/* Public routes accessible to all */}
       <Route
         path="/signup"
-        element={<Signup signUpUrl={"http://localhost:4000/api"} />}
+        element={<Signup signUpUrl={"https://ticket-support-system-q1k0.onrender.com/api"} />}
       />
 
       <Route
         path="/login"
-        element={<Login loginUrl={"http://localhost:4000/api"} />}
+        element={<Login loginUrl={"https://ticket-support-system-q1k0.onrender.com/api"} />}
       />
       <Route
         path="/logout"
-        element={<Logout logoutUrl={"http://localhost:4000/api"} />}
+        element={<Logout logoutUrl={"https://ticket-support-system-q1k0.onrender.com/api"} />}
       />
       {/* Admin routes */}
       <Route element={<ProtectAdmin />}>

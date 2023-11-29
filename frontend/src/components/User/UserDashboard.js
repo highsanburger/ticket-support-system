@@ -23,7 +23,7 @@ const UserDashboard = () => {
     const fetchUserTickets = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/ticket/user/${createdBy}`,
+          `https://ticket-support-system-q1k0.onrender.com/api/ticket/user/${createdBy}`,
         );
         setUserTickets(response.data);
       } catch (error) {

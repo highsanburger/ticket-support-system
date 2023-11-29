@@ -20,7 +20,7 @@ const UserTicketView = () => {
     const fetchTicket = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/ticket/${id}`,
+          `https://ticket-support-system-q1k0.onrender.com/api/ticket/${id}`,
         );
         setTicket(response.data);
         setEditedTitle(response.data.title);
@@ -36,7 +36,7 @@ const UserTicketView = () => {
   const handleUpdate = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:4000/api/ticket/${id}`,
+        `https://ticket-support-system-q1k0.onrender.com/api/ticket/${id}`,
         {
           title: editedTitle,
           description: editedDescription,
@@ -53,7 +53,9 @@ const UserTicketView = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:4000/api/ticket/${id}`);
+      await axios.delete(
+        `https://ticket-support-system-q1k0.onrender.com/api/ticket/${id}`,
+      );
       toast.success("Ticket Deleted!");
       setTimeout(() => {
         // Navigate after waiting

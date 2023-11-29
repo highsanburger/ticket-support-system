@@ -15,7 +15,7 @@ const AdminTicketView = () => {
     const fetchTicket = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/ticket/${id}`,
+          `https://ticket-support-system-q1k0.onrender.com/api/ticket/${id}`,
         );
         setTicket(response.data);
       } catch (error) {
@@ -29,7 +29,7 @@ const AdminTicketView = () => {
   const handleStatusChange = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:4000/api/ticket/${id}`,
+        `https://ticket-support-system-q1k0.onrender.com/api/ticket/${id}`,
         {
           status: newStatus,
         },

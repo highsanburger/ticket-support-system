@@ -33,7 +33,7 @@ const CreateTicketForm = () => {
       const status = "Open";
 
       const response = await axios.post(
-        "http://localhost:4000/api/ticket/create",
+        "https://ticket-support-system-q1k0.onrender.com/api/ticket/create",
         {
           title,
           description,

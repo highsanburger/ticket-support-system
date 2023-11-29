@@ -22,7 +22,7 @@ app.use(express.json());
 const cors = require("cors");
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://ticket-support-system-q1k0.onrender.com",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true, // Enable credentials (cookies, authorization headers, etc.)
   }),

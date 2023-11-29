@@ -21,8 +21,8 @@ const AdminDashboard = () => {
       // Define the URL based on the selected status
       const url =
         selectedStatus === "All"
-          ? "http://localhost:4000/api/ticket"
-          : `http://localhost:4000/api/ticket?status=${selectedStatus}`;
+          ? "https://ticket-support-system-q1k0.onrender.com/api/ticket"
+          : `https://ticket-support-system-q1k0.onrender.com/api/ticket?status=${selectedStatus}`;
 
       const response = await axios.get(url);
       console.log("Response:", response.data); // Log the entire response
